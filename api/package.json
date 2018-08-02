@@ -1,0 +1,22 @@
+{
+  "name": "vibez",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "micro-dev",
+    "start": "micro",
+    "dev:debug": "DEBUG=sonos* nodemon index.js"
+  },
+  "dependencies": {
+    "algorithmia": "^0.3.10",
+    "micro": "^9.3.2",
+    "musixmatch-node-sdk": "^4.9.8",
+    "node-sonos": "^0.12.6",
+    "sonos": "git://github.com/bencevans/node-sonos.git"
+  },
+  "devDependencies": {
+    "micro-dev": "^3.0.0",
+    "nodemon": "^1.18.3"
+  }
+}
