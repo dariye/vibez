@@ -12,61 +12,75 @@
  */
 
 const { Sonos, DeviceDiscovery } = require('sonos')
-const socket = require('socket.io-client')('http://localhost:54609')
+const to = require('../utils/to')
+// const socket = require('socket.io-client')('http://localhost:54609')
 
-module.exports = (server) => {
+module.exports = (socket) => {
   DeviceDiscovery((device) => {
     console.log('found device at ' + device.host)
-    device.play()
-      .then(() => console.log('now playing'))
 
-    device.getVolume()
-      .then((volume) => console.log(`current volume = ${volume}`))
-
-    device.setMuted(false)
-        .then(`${device.host} now muted`)
-
-    device.getQueue().then(result => {
-      console.log('Current queue: %s', JSON.stringify(result, null, 2))
-    }).catch(err => {
-      console.log('Error fetch queue %j', err)
+    device.getName().then(name => {
+      console.log(name)
     })
-
+    
     device.currentTrack().then(track => {
       console.log('Got current track %j', track)
     }).catch(err => { console.log('Error occurred %j', err) })
 
     socket.on('connection', (socket) => {
-
       const emit = (event, payload = {}) => {
         socket.broadcast.emit(event, { ...payload })
       }
 
+      device.getQueue().then(queue => {
+        emit('currentQueue', { queue })
+      }).catch(err => {
+        console.log('Error fetch queue %j', err)
+      })
+
+      socket.on('togglePlay', async () => {
+        const [err, data] = await to(device.getCurrentState())
+        data === 'playing' ? await device.stop() : await device.play()
+      })
+
+      socket.on('previous', async () => {
+        await device.previous()
+      })
+
+      socket.on('next', async () => {
+        await device.previous()
+      })
+
       device.on('CurrentTrack', track => {
-        console.log('Track changed to %s by %s', track.title, track.artist)
+        // console.log('Track changed to %s by %s', track.title, track.artist)
         emit('currentTrack', { track })
       })
 
       device.on('NextTrack', track => {
-        console.log('The next track will be %s by %s', track.title, track.artist)
+        // console.log('The next track will be %s by %s', track.title, track.artist)
         emit('nextTrack', { track })
       })
 
       device.on('Volume', volume => {
-        console.log('New Volume %d', volume)
+        // console.log('New Volume %d', volume)
+        emit('volume', { volume })
       })
 
       device.on('Mute', isMuted => {
-        console.log('This speaker is %s.', isMuted ? 'muted' : 'unmuted')
+        // console.log('This speaker is %s.', isMuted ? 'muted' : 'unmuted')
+        emit('mute', { isMuted })
       })
 
       device.on('PlayState', state => {
-        console.log('The state changed to %s.', state)
+        // console.log('The state changed to %s.', state)
+        emit('playState', { state })
       })
 
       device.on('AVTransport', transport => {
-        console.log('AVTransport event %j', transport)
+        // console.log('AVTransport event %j', transport)
+        emit('avTransport', { transport })
       })
+      
     })
   })
 }

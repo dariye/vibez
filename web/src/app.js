@@ -5,10 +5,10 @@ import './app.css'
 
 
 const socket = io('http://localhost:4000')
-socket.on('connect', function(){
+socket.on('connect', () => {
   console.log('connected')
 });
-socket.on('event', (data) => {
+socket.on('currentTrack', (data) => {
   console.log(data)
 })
 
