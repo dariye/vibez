@@ -13,28 +13,23 @@ class GetSongLyrics {
     this.queue = testData // to be changed to data coming from sonos
   }
   async getwithaxios() {
-    const songLyricsArray = [];
-    songLyricsArray.push(await this.queue.map((songObj) => {
-      axios.get('https://api.musixmatch.com/ws/1.1/matcher.lyrics.get', {
+    const songLyricsArray = this.queue.map(async songObj => {
+      const response = await axios.get('https://api.musixmatch.com/ws/1.1/matcher.lyrics.get', {
         params: {
           q_track: songObj.title, 
           q_artist: songObj.artist, 
           apikey: process.env.MUSIXMATCH_API_KEY
         }
       })
-      .then(response => {
-        const body = response.data;
-        const lyrics = body.message.body.lyrics.lyrics_body
-        const obj = { ...songObj, lyrics}
-        return obj;
-        // songLyricsArray.push(obj);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    }))
-    console.log('songLyricsArray', songLyricsArray)  
+      const body = response.data;
+      const lyrics = body.message.body.lyrics.lyrics_body
+      const obj = { ...songObj, lyrics}
+      return obj;
+    })
+    const results = await Promise.all(songLyricsArray);
+    return results;
   }
+
   async getSongIdAndLyrics() {
     const songLyricsArray = [];
     let songLyrics = {}
@@ -91,7 +86,9 @@ class GetSongLyrics {
 }
 
 const getSongLyrics = new GetSongLyrics()
-getSongLyrics.getSongIdAndLyrics()
+getSongLyrics.getwithaxios().then(response => {
+  console.log(response);
+})
 
 module.exports = {
   getSongLyrics
