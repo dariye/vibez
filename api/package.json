@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "algorithmia": "^0.3.10",
+    "dotenv": "^6.0.0",
     "micro": "^9.3.2",
     "micro-cors": "^0.1.0",
     "microrouter": "^3.1.3",
