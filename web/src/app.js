@@ -1,6 +1,16 @@
 import { h } from 'hyperapp'
+import io from 'socket.io-client'
 import logo from './logo.svg'
 import './app.css'
+
+
+const socket = io('http://localhost:4000')
+socket.on('connect', function(){
+  console.log('connected')
+});
+socket.on('event', (data) => {
+  console.log(data)
+})
 
 export const state = {
   destroyed: false,

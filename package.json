@@ -1,0 +1,19 @@
+{
+  "name": "vibez",
+  "version": "1.0.0",
+  "private": "true",
+  "license": "MIT",
+  "scripts": {
+    "postinstall": "run-p install:api install:web",
+    "install:api": "cd api && yarn",
+    "install:web": "cd web && yarn",
+
+    "dev": "run-p dev:api dev:web",
+    "dev:api": "npm run dev --prefix api",
+    "dev:web": "npm run start --prefix web"
+  },
+  "devDependencies": {
+    "opn-cli": "^3.1.0",
+    "yarn-run-all": "^3.1.1"
+  }
+}
