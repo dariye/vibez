@@ -3,7 +3,7 @@
  */
 
 const algorithmia = require('algorithmia')
-
+const to = require('../utils/to');
 class Algorithmia {
   constructor(key, options) {
     this._client = algorithmia.client(key)
@@ -28,14 +28,15 @@ class Algorithmia {
     return this._client
   }
 
-  async injest(input = []) {
+  injest(input = []) {
     if (input.length === 0 || input.length < 3)
       throw new Error('Invalid input value')
-
-    const [err, data] = await to(this._algo.pipe(input))
-    if (err)
-      throw new Error(err)
-    return data.get()
+    algorithmia.client('simrE39h1bLAJ0IclMcKSFFt1il1')
+      .algo("nlp/ProfanityDetection/1.0.0")
+      .pipe(input)
+      .then(function(response) {
+        return response.get();
+      });
   }
 }
 

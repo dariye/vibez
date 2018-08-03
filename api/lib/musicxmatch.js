@@ -33,21 +33,18 @@ class GetSongLyrics {
   async getSongIdAndLyrics() {
     const songLyricsArray = [];
     let songLyrics = {}
-    for (let i = 0; i < this.queue.length; i += 1) {
-      const songObj = this.queue[i];
-      const input = {q_track: songObj.title, q_artist: songObj.artist, apikey: process.env.MUSIXMATCH_API_KEY};
-      await request.get({
-        url: 'https://api.musixmatch.com/ws/1.1/matcher.lyrics.get', 
-        qs: input, 
-        jsonP: true},
-        (error, response) => {
-        const body = JSON.parse(response.body)
-        const lyrics = body.message.body.lyrics.lyrics_body
-        const obj = { ...songObj, lyrics}
-        songLyricsArray.push(obj);
-      });
-    }
-    // return songLyricsArray 
+    const songObj = this.queue;
+    const input = {q_track: songObj.title, q_artist: songObj.artist, apikey: process.env.MUSIXMATCH_API_KEY};
+    await request.get({
+      url: 'https://api.musixmatch.com/ws/1.1/matcher.lyrics.get', 
+      qs: input, 
+      jsonP: true},
+      (error, response) => {
+      const body = JSON.parse(response.body)
+      const lyrics = body.message.body.lyrics.lyrics_body
+      console.log('lyrics', lyrics)
+      return lyrics;
+    });
   }
 
   async getMatcherTrack(input) {
