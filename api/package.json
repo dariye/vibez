@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "algorithmia": "^0.3.10",
+    "axios": "^0.18.0",
     "dotenv": "^6.0.0",
     "micro": "^9.3.2",
     "micro-cors": "^0.1.0",
@@ -17,6 +18,7 @@
     "musixmatch-node-sdk": "^4.9.8",
     "node-sonos": "^0.12.6",
     "socket.io-client": "^2.1.1",
+    "request": "^2.87.0",
     "sonos": "git://github.com/bencevans/node-sonos.git"
   },
   "devDependencies": {
