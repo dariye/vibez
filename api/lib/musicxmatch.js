@@ -9,8 +9,8 @@ const axios = require('axios')
 
 const testData = require('./data')
 class GetSongLyrics {
-  constructor() {
-    this.queue = testData // to be changed to data coming from sonos
+  constructor(queue) {
+    this.queue = queue // to be changed to data coming from sonos
   }
   async getwithaxios() {
     const songLyricsArray = this.queue.map(async songObj => {
@@ -35,16 +35,12 @@ class GetSongLyrics {
     let songLyrics = {}
     const songObj = this.queue;
     const input = {q_track: songObj.title, q_artist: songObj.artist, apikey: process.env.MUSIXMATCH_API_KEY};
-    await request.get({
-      url: 'https://api.musixmatch.com/ws/1.1/matcher.lyrics.get', 
-      qs: input, 
-      jsonP: true},
-      (error, response) => {
-      const body = JSON.parse(response.body)
-      const lyrics = body.message.body.lyrics.lyrics_body
-      console.log('lyrics', lyrics)
-      return lyrics;
-    });
+    const {data: {message: {body: {lyrics}}}} = await axios.get('https://api.musixmatch.com/ws/1.1/matcher.lyrics.get',
+      {
+      params: { ...input },
+    })
+    let lyric = lyrics.lyrics_body ? lyrics.lyrics_body : null
+    return lyric
   }
 
   async getMatcherTrack(input) {
@@ -82,11 +78,9 @@ class GetSongLyrics {
 
 }
 
-const getSongLyrics = new GetSongLyrics()
-getSongLyrics.getwithaxios().then(response => {
-  console.log(response);
-})
-
-module.exports = {
-  getSongLyrics
-}
+// const getSongLyrics = new GetSongLyrics()
+// getSongLyrics.getwithaxios().then(response => {
+//   console.log(response);
+// })
+//
+module.exports = GetSongLyrics

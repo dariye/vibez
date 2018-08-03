@@ -22,15 +22,33 @@ class musicPlayer {
 
 (function () {
   const newMusicplayer = new musicPlayer();
-
   const socket = io()
-  socket.on('queue', ({ queue }) => {
-    let trackList = ''
-    const items = queue.items.map((item) => {
-      trackList += `<li class="track">${item.title}</li>`
-    })
-    const tracks = document.getElementById('tracks')
-    tracks.innerHTML = trackList
+  const nextBtn = document.getElementById('next')
+  nextBtn.addEventListener('click', () => {
+    socket.emit('next')
+  })
+  const prevBtn = document.getElementById('prev')
+  prevBtn.addEventListener('click', () => {
+    socket.emit('prev')
+  })
+  const playBtn = document.getElementById('play')
+  playBtn.addEventListener('click', () => {
+    socket.emit('togglePlay')
+  })
+  const select = document.getElementById('preferences')
+  select.addEventListener('change', () => {
+    const rating = select.value
+    if (rating !== 'PG' || rating !== 'R') return
+    emit('rating', { rating })
+  })
+  socket.on('prev', ({ track }) => {})
+  socket.on('next', ({ track }) => {})
+  socket.on('togglePlay', ({ track }) => {})
+  socket.on('rating', ({ rating }) => {
+    select.value = rating
+  })
+  socket.on('playMode', ({ mode }) => {
+    console.log(mode)
   })
 })()
 

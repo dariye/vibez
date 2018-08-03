@@ -28,15 +28,13 @@ class Algorithmia {
     return this._client
   }
 
-  injest(input = []) {
+  async injest(input = []) {
     if (input.length === 0 || input.length < 3)
       throw new Error('Invalid input value')
-    algorithmia.client('simrE39h1bLAJ0IclMcKSFFt1il1')
+    const response = await algorithmia.client('simrE39h1bLAJ0IclMcKSFFt1il1')
       .algo("nlp/ProfanityDetection/1.0.0")
       .pipe(input)
-      .then(function(response) {
-        return response.get();
-      });
+    return response.get()
   }
 }
 

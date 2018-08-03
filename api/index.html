@@ -8,29 +8,26 @@
   <script async src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 </head>
 <body>
+  <h1>Vibez</h1>
   <div class="player">
   <div id="info" class="info">
-    <span class="artist">Flume</span>
-    <span class="name">Say it</span>
-    <div class="progress-bar">
-      <div class="bar"></div>
-    </div>
+    <span class="artist"></span>
+    <span class="name"></span>
   </div>
   <div id="control-panel" class="control-panel">
     <div class="album-art"></div>
     <div class="controls">
-      <div class="prev"></div>
+      <div id="prev" class="prev"></div>
       <div id="play" class="play"></div>
-      <div class="next"></div>
+      <div id="next" class="next"></div>
     </div>
   </div>
   </div>
   <div class="preferences">
-    <div class="content">
-      <select>
-        <option disabled>Select lyrical content rating</option>
-        <option>PG Rated</option>
-        <option>R Rated</option>
+      <select id="preferences">
+        <option selected="true" disabled="disabled">Select lyrical content rating</option>
+        <option value="PG">PG</option>
+        <option value="R">R</option>
       </select>
   </div>
   <div class="queue">
